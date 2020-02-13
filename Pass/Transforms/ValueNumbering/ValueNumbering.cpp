@@ -56,27 +56,27 @@ struct ValueNumbering : public FunctionPass {
                 Value *v1 = inst.getOperand(0);
                 Value *v2 = inst.getOperand(1);
 
-                int vn1;
-                int vn2;
+                int valueNumber1;
+                int valueNumber2;
 
                 if(!isInMap(valueHash, v1)){
                   valueHash.insert(make_pair(make_pair(v1, 0), counter));
                   valueHash_reversed[counter] = make_pair(v1, 0);
                   vershionHash[v1] = 0;
-                  vn1 = counter;
+                  valueNumber1 = counter;
                   counter++;
                 } else {
-                  vn1 = valueHash.at(make_pair(v1, vershionHash[v1]));
+                  valueNumber1 = valueHash.at(make_pair(v1, vershionHash[v1]));
                 }
 
                 if(!isInMap(valueHash, v2)){
                   valueHash.insert(make_pair(make_pair(v2, 0), counter));
                   valueHash_reversed[counter] = make_pair(v2, 0);
                   vershionHash[v2] = 0;
-                  vn2 = counter;
+                  valueNumber2 = counter;
                   counter++;
                 } else {
-                  vn2 = valueHash.at(make_pair(v2, vershionHash[v2]));
+                  valueNumber2 = valueHash.at(make_pair(v2, vershionHash[v2]));
                 }
 
                 string op;
@@ -85,11 +85,11 @@ struct ValueNumbering : public FunctionPass {
                 if(inst.getOpcode() == Instruction::Mul) op = "*";
                 if(inst.getOpcode() == Instruction::SDiv) op = "/";
 
-                if(inst.isCommutative() && vn1 > vn2) {
-                  swap(vn1, vn2);
+                if(inst.isCommutative() && valueNumber1 > valueNumber2) {
+                  swap(valueNumber1, valueNumber2);
                 }
 
-                string expr = to_string(vn1) + op + to_string(vn2);
+                string expr = to_string(valueNumber1) + op + to_string(valueNumber2);
 
                 Value* ptr = dyn_cast<Value>(&inst);
                 if(vershionHash.find(ptr) == vershionHash.end()){
@@ -111,8 +111,7 @@ struct ValueNumbering : public FunctionPass {
                     ++ counter;
                 } else {
                     int tmp_counter = exprHash[expr];
-
-                    // errs() << "Redunant Computation: " << *ptr << "\n";
+                    // redundant
                     if(!isInMap(valueHash, ptr)){
                         valueHash.insert(make_pair(make_pair(ptr, 0),tmp_counter));
                         valueHash_reversed[tmp_counter] = make_pair(ptr, 0);
