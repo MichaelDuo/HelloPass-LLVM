@@ -1,11 +1,13 @@
 #include "llvm/Pass.h"
 #include "llvm/IR/Module.h"
+#include "llvm/IR/Value.h"
 #include "llvm/IR/Function.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/Instruction.h"
 #include <string>
+#include <sstream>
 
 using namespace llvm;
 using namespace std;
@@ -13,6 +15,14 @@ using namespace std;
 #define DEBUG_TYPE "ValueNumbering"
 
 using namespace llvm;
+
+string getValueName(Value *v){
+  Value *vPrt = v;
+  std::stringstream ss;
+  ss << vPrt;  
+  std::string name = ss.str(); 
+  return name;
+}
 
 namespace {
 struct ValueNumbering : public FunctionPass {
@@ -23,42 +33,18 @@ struct ValueNumbering : public FunctionPass {
   bool runOnFunction(Function &F) override {
     errs() << "ValueNumbering: ";
     errs() << F.getName() << "\n";
+
         if (F.getName() != func_name) return false;
+
+        map<string, int> hash;
 
         for (auto& basic_block : F)
         {
-
+            int count = 1;
+            Value *tInst;
             for (auto& inst : basic_block)
             {
-            	errs() << inst << "\n";
-              if(inst.getOpcode() == Instruction::Load){
-                      errs() << "This is Load"<<"\n";
-              }
-              if(inst.getOpcode() == Instruction::Store){
-                      errs() << "This is Store"<<"\n";
-              }
-                if (inst.isBinaryOp())
-                {
-                    errs() << "Op Code:" << inst.getOpcodeName()<<"\n"; // print opcode name
-                    if(inst.getOpcode() == Instruction::Add){
-                      errs() << "This is Addition"<<"\n";
-                    }
-                    if(inst.getOpcode() == Instruction::Add){
-                      errs() << "This is Addition"<<"\n";
-                    }
-                    if(inst.getOpcode() == Instruction::Mul){
-                      errs() << "This is Multiplication"<<"\n";
-                    }
-                    
-                    // See Other classes, Instruction::Sub, Instruction::UDiv, Instruction::SDiv
-                //	errs() << "Operand(0)" << (*inst.getOperand(0))<<"\n";
-                    auto* ptr = dyn_cast<User>(&inst);
-					//errs() << "\t" << *ptr << "\n";
-                    for (auto it = ptr->op_begin(); it != ptr->op_end(); ++it) {
-                        errs() << "\t" <<  *(*it) << "\n";
-                        //if ((*it)->hasName()) errs() << (*it)->getName() << "\n";                      
-                    }
-                }
+              
             }
         }
     return false;

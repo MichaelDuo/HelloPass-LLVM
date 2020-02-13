@@ -1,0 +1,5 @@
+digraph "CFG for 'main' function" {
+	label="CFG for 'main' function";
+
+	Node0x7fed86e022b0 [shape=record,label="{%2:\l  call void @test(i32 10, i32 11, i32 25, i32 33, i32 43, i32 26)\l  ret i32 0\l}"];
+}

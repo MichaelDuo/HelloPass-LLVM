@@ -1,0 +1,5 @@
+digraph "CFG for 'test' function" {
+	label="CFG for 'test' function";
+
+	Node0x7fed86e01f30 [shape=record,label="{%6:\l  %7 = mul nsw i32 %1, %2\l  %8 = add nsw i32 %1, 1\l  %9 = mul nsw i32 %1, %2\l  %10 = mul nsw i32 %8, %2\l  ret void\l}"];
+}
